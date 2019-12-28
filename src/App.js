@@ -10,7 +10,7 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      expandedFolders: ['/Common7/IDE'],
+      expandedFolders: ['/Common7/IDE', '/VC/atlmfc'],
       mattchedFiles: [],
       searchValue: '',
     }

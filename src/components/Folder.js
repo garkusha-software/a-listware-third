@@ -23,8 +23,8 @@ export default class Folder extends Component {
     componentDidMount() {
         const { expandedFolders, mattchedFiles } = this.props;
 
-        this.findAndExpandFolder([this.props.data]);
-        // this.findAndExpandFolder(mattchedFiles);
+        this.findAndExpandFolder(expandedFolders);
+        this.findAndExpandFolder(mattchedFiles);
     }
 
     folderToggle = () => {
@@ -42,16 +42,15 @@ export default class Folder extends Component {
         }
     }
 
-    findAndExpandFolder = folders => {
+    findAndExpandFolder = (folders = []) => {
         const { expandedFolders = [] } = this.props;
-
-        expandedFolders.map(folderPath => {
-            folders.map(target => {
+        folders.map(folderPath => {
+            [this.props.data].map(target => {
                 if (folderPath.includes(target.name)) {
                     this.setState({ isFolderOpen: true });
                 } else {
-                    // !expandedFolders.length
-                    //     && this.setState({ isFolderShow: false })
+                    !expandedFolders.length
+                        && this.setState({ isFolderShow: false })
                 }
             });
         })
@@ -80,6 +79,7 @@ export default class Folder extends Component {
                         {children.map(child => {
                             return child.type === 'FOLDER' ?
                                 <Folder
+                                    expandedFolders={expandedFolders}
                                     mattchedFiles={mattchedFiles}
                                     key={child.name}
                                     data={child}
