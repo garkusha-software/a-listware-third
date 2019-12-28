@@ -24,7 +24,7 @@ export default class App extends Component {
     this.setState({
       expandedFolders: [],
       mattchedFiles: []
-    }, () => this.searchFile(DiskData, '/'));
+    }, () => this.state.searchValue.length && this.searchFile(DiskData, '/'));
   }
 
   clearHandle = () => {
