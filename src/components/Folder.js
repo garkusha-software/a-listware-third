@@ -20,6 +20,14 @@ export default class Folder extends Component {
 
     componentDidMount() {
         this.expandedFoldersHandle(this.props.expandedFolders);
+        this.props.isSearched && this.setState({ isFolderOpen: true });
+    }
+
+    componentDidUpdate(prevProps) {
+        const { isSearched } = this.props;
+
+        isSearched !== prevProps.isSearched &&
+            this.setState({ isFolderOpen: isSearched });
     }
 
     folderToggle = () => {
@@ -27,7 +35,7 @@ export default class Folder extends Component {
     }
 
     expandedFoldersHandle = (paths = []) => {
-        const { expandedFolders = [], data, nestingIndex } = this.props;
+        const { expandedFolders = [], data, nestingIndex, isSearched } = this.props;
         paths.map(folderPath => {
             const pathCharacters = folderPath.split('/');
             data.name === pathCharacters[nestingIndex] &&
@@ -37,7 +45,7 @@ export default class Folder extends Component {
 
     render() {
         const { name, children } = this.props.data;
-        const { expandedFolders, nestingIndex } = this.props;
+        const { expandedFolders, nestingIndex, isSearched } = this.props;
 
         return (
             <div style={{ maxWidth: 'fit-content' }}>
@@ -62,6 +70,7 @@ export default class Folder extends Component {
                                     key={child.name}
                                     data={child}
                                     nestingIndex={nestingIndex + 1}
+                                    isSearched={isSearched}
                                 /> :
                                 <File
                                     key={child.name}
