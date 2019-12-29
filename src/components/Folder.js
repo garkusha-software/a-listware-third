@@ -15,52 +15,31 @@ export default class Folder extends Component {
 
         this.state = {
             isFolderOpen: false,
-            isFolderShow: true,
-            openedFiles: [],
         }
     }
 
     componentDidMount() {
-        const { expandedFolders, mattchedFiles } = this.props;
-
-        this.folderShowHandle(expandedFolders);
-        this.folderShowHandle(mattchedFiles);
+        this.expandedFoldersHandle(this.props.expandedFolders);
     }
 
     folderToggle = () => {
         this.setState({ isFolderOpen: !this.state.isFolderOpen });
     }
 
-    componentDidUpdate(prevProps) {
-        const { mattchedFiles } = this.props;
-        if (mattchedFiles && mattchedFiles.length
-            !== prevProps.mattchedFiles.length) {
-            this.setState({
-                isFolderOpen: false,
-                isFolderShow: true
-            }, () => this.folderShowHandle(this.props.mattchedFiles))
-        }
-    }
-
-    folderShowHandle = (folders = []) => {
-        const { expandedFolders = [] } = this.props;
-        folders.map(folderPath => {
-            [this.props.data].map(target => {
-                if (folderPath.includes(target.name)) {
-                    this.setState({ isFolderOpen: true });
-                } else {
-                    !expandedFolders.length
-                        && this.setState({ isFolderShow: false })
-                }
-            });
+    expandedFoldersHandle = (paths = []) => {
+        const { expandedFolders = [], data, nestingIndex } = this.props;
+        paths.map(folderPath => {
+            const pathCharacters = folderPath.split('/');
+            data.name === pathCharacters[nestingIndex] &&
+                this.setState({ isFolderOpen: true });
         })
     }
 
     render() {
         const { name, children } = this.props.data;
-        const { expandedFolders, mattchedFiles } = this.props;
+        const { expandedFolders, nestingIndex } = this.props;
 
-        return this.state.isFolderShow ? (
+        return (
             <div style={{ maxWidth: 'fit-content' }}>
                 <div
                     onClick={this.folderToggle}
@@ -80,20 +59,19 @@ export default class Folder extends Component {
                             return child.type === 'FOLDER' ?
                                 <Folder
                                     expandedFolders={expandedFolders}
-                                    mattchedFiles={mattchedFiles}
                                     key={child.name}
                                     data={child}
+                                    nestingIndex={nestingIndex + 1}
                                 /> :
                                 <File
                                     key={child.name}
                                     file={child}
-                                    files={mattchedFiles}
                                 />
                         }
                         )}
                     </div>
                 )}
             </div>
-        ) : null;
+        )
     }
 }
