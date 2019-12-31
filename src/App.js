@@ -26,7 +26,7 @@ export default class App extends Component {
   inputHandle = searchValue => {
     this.setState({ searchValue });
     if (!searchValue.length) {
-      this.setState({ data: [...loadData()], searchValue: false });
+      this.clearHandle();
     }
   }
 
@@ -72,6 +72,7 @@ export default class App extends Component {
           <input
             value={this.state.searchValue}
             onChange={e => this.inputHandle(e.target.value)}
+            onKeyPress={e => e.key === 'Enter' && this.searchHandle()}
             type="text"
             className="form-control"
             placeholder="File name"
